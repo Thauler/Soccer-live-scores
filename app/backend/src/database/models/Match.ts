@@ -1,8 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '.';
-import Team from './team';
+import Team from './Team';
 
 export default class Match extends Model {
+  public id: number;
   public homeTeam: number;
   public homeTeamGoals: number;
   public awayTeam: number;
@@ -10,16 +11,38 @@ export default class Match extends Model {
   public inProgress: boolean;
 }
 Match.init({
-  homeTeam: DataTypes.NUMBER,
-  homeTeamGoals: DataTypes.NUMBER,
-  awayTeam: DataTypes.NUMBER,
-  awayTeamGoals: DataTypes.NUMBER,
-  inProgress: DataTypes.BOOLEAN,
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  homeTeam: {
+    type: DataTypes.STRING,
+    field: 'role',
+  },
+  homeTeamGoals: {
+    type: DataTypes.STRING,
+    field: 'role',
+  },
+  awayTeam: {
+    type: DataTypes.STRING,
+    field: 'role',
+  },
+  awayTeamGoals: {
+    type: DataTypes.STRING,
+    field: 'role',
+  },
+  inProgress: {
+    type: DataTypes.BOOLEAN,
+    field: 'role',
+  },
 }, {
   underscored: true,
   timestamps: false,
   sequelize: db,
   modelName: 'Match',
+  tableName: 'matches',
 });
 
 Team.hasMany(Match, { foreignKey: 'homeTeam' });
