@@ -2,6 +2,7 @@ version: '3.9'
 services:
   frontend:
     build: ./frontend
+    platform: linux/x86_64
     restart: 'always'
     ports:
       - 3000:3000
@@ -17,10 +18,11 @@ services:
       retries: 5
   backend:
     build: ./backend
+    platform: linux/x86_64
+    restart: 'always'
     command: npm run dev
     volumes:
-      - ./backend/src:/app/src/
-    restart: 'always'
+      - './backend/src:/app/src/'
     ports:
       - 3001:3001
     container_name: app_backend

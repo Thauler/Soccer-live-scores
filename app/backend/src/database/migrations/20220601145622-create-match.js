@@ -27,7 +27,7 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       away_team_goals: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       in_progress: {
         type: Sequelize.BOOLEAN
