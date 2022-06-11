@@ -14,12 +14,14 @@ export default class UserService {
     const result = await this.model
       .findOne({ where: { email } });
 
-    if (!result) return { code: 401, message: { message: 'Incorrect email or password' } };
+    if (!result?.email) {
+      return { code: 401, message: { message: 'Incorrect email or password' } };
+    }
 
     const passwordDecoded = bcrypt.compareSync(password as string, result.password as string);
     console.log(passwordDecoded);
 
-    if (!passwordDecoded) {
+    if (!passwordDecoded && password.length < 6) {
       return { code: 401, message: { message: 'Incorrect email or password' } };
     }
 

@@ -15,6 +15,16 @@ export const fakeWrongPassword = {
   password: '1234'
 }
 
+export const fakeNoPassword = {
+  email: 'admin@admin.com',
+  password: null
+}
+
+export const fakeNoEmail = {
+  email: null,
+  password: 'secret_admin'
+}
+
 export const fakeLoginResponse = {
   id: 1,
   username: 'Admin',

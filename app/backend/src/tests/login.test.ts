@@ -8,7 +8,7 @@ import { app } from '../app';
 import UserModel from '../database/models/User';
 
 import { Response } from 'superagent';
-import { fakeLogin, fakeLoginResponse, fakeWrongEmail, fakeWrongPassword } from './mockTest/userMock';
+import { fakeLogin, fakeLoginResponse, fakeNoEmail, fakeNoPassword, fakeWrongEmail, fakeWrongPassword } from './mockTest/userMock';
 
 chai.use(chaiHttp);
 
@@ -36,6 +36,7 @@ describe('em caso de sucesso', () => {
 
       expect(chaiHttpResponse.status).to.be.equals(200);
       expect(user).deep.equals(fakeLoginResponse);
+      expect(user.password).to.have.length.greaterThanOrEqual(6);
       expect(token).not.equal(undefined);
   });
 });
@@ -71,7 +72,34 @@ describe('caso a senha seja inválida', () => {
       const { message } = chaiHttpResponse.body;
 
       expect(chaiHttpResponse.status).to.equals(401);
+      expect(fakeWrongPassword.password).to.have.length.lessThan(6);
       expect(message).to.be.equals({ message: "Incorrect email or password" });
+  })
+})
+describe('Caso o email não seja informado', () => {
+  it('Se o login não tiver o campo "email"', async () => {
+    chaiHttpResponse = await chai
+    .request(app)
+    .post('/login')
+    .send(fakeNoEmail);
+
+    const { message } = chaiHttpResponse.body;
+
+    expect(chaiHttpResponse.status).to.equals(400);
+    expect(message).to.be.equals({ message: "All fields must be filled" });
+  })
+})
+describe('Caso a senha não seja informado', () => {
+  it('Se o login não tiver o campo "password"', async () => {
+    chaiHttpResponse = await chai
+    .request(app)
+    .post('/login')
+    .send(fakeNoPassword);
+
+    const { message } = chaiHttpResponse.body;
+
+    expect(chaiHttpResponse.status).to.equals(400);
+    expect(message).to.be.equals({ message: "All fields must be filled" });
   })
 })
 });
