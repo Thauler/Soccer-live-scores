@@ -6,7 +6,16 @@ export default class UserModel extends Model {
   public username: string;
   public role: string;
   public email: string;
-  public password: string;
+  public password?: string;
+
+  get userAtt() {
+    return {
+      id: this.id,
+      username: this.username,
+      role: this.role,
+      email: this.email,
+    };
+  }
 }
 UserModel.init({
   id: {

@@ -10,12 +10,11 @@ export default class UserController {
 
   public login = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const { email } = req.body;
-      const findOne = await this.service.findOne(email);
-      console.log(findOne);
-      return res.status(200).json(findOne);
+      const findOne = await this.service.findOne(req.body);
+      return res.status(findOne.code).json(findOne.message);
     } catch (e) {
-      return res.status(500).json({ message: e });
+      console.log(e);
+      return res.status(500).json({ message: 'Internal server error!' });
     }
   };
 }

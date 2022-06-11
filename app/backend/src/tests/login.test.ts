@@ -8,7 +8,7 @@ import { app } from '../app';
 import UserModel from '../database/models/User';
 
 import { Response } from 'superagent';
-import { fakeLogin, fakeLoginResponse } from './mockTest/userMock';
+import { fakeLogin, fakeLoginResponse, fakeWrongEmail, fakeWrongPassword } from './mockTest/userMock';
 
 chai.use(chaiHttp);
 
@@ -39,5 +39,40 @@ describe('em caso de sucesso', () => {
       expect(token).not.equal(undefined);
   });
 });
+describe('caso o email passado seja invalido', () => {
+  // não usa pois não chegara nessa camada
+  //   before(() => {
+  //   sinon.stub(UserModel, 'findOne').resolves(fakeLoginResponse);
+  // });
+
+  // after(() => {
+  //   (UserModel.findOne as sinon.SinonStub).restore();
+  // });
+
+  it('Se o login tiver o "email" inválido, com um status 401 e uma mensagem', async () => {
+    chaiHttpResponse = await chai
+    .request(app)
+    .post('/login')
+    .send(fakeWrongEmail);
+
+      const { message } = chaiHttpResponse.body;
+
+      expect(chaiHttpResponse.status).to.equals(401);
+      expect(message).to.be.equals({ message: "Incorrect email or password" });
+  })
+})
+describe('caso a senha seja inválida', () => {
+    it('Se o login tiver o "password" inválido, com um status 401 e uma mensagem', async () => {
+    chaiHttpResponse = await chai
+    .request(app)
+    .post('/login')
+    .send(fakeWrongPassword);
+
+      const { message } = chaiHttpResponse.body;
+
+      expect(chaiHttpResponse.status).to.equals(401);
+      expect(message).to.be.equals({ message: "Incorrect email or password" });
+  })
+})
 });
 
