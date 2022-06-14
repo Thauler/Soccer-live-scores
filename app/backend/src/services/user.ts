@@ -10,7 +10,7 @@ export default class UserService {
     this.model = UserModel;
   }
 
-  public findOne = async ({ email, password }: IUser) => {
+  public login = async ({ email, password }: IUser) => {
     const result = await this.model
       .findOne({ where: { email } });
 
@@ -19,12 +19,11 @@ export default class UserService {
     }
 
     const passwordDecoded = bcrypt.compareSync(password as string, result.password as string);
-    console.log(passwordDecoded);
 
     if (!passwordDecoded && password.length < 6) {
       return { code: 401, message: { message: 'Incorrect email or password' } };
     }
 
-    return { code: 200, message: { user: result.userAtt, token: JWT.secret(result?.email) } };
+    return { code: 200, message: { user: result.userAtt, token: JWT.secret(result.role) } };
   };
 }

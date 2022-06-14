@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import path = require('path');
 
 export default class JWT {
@@ -15,5 +15,10 @@ export default class JWT {
       { expiresIn: '1h', algorithm: 'HS256' },
     );
     return secret;
+  }
+
+  static verify(token: string) {
+    const tokenVerify = verify(token, JWT.JWTreader());
+    return tokenVerify;
   }
 }
