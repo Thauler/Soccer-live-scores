@@ -9,13 +9,12 @@ export default class TeamsService {
 
   public findAll = async () => {
     const allTeams = await this.model.findAll();
-    return allTeams;
+    return { code: 200, message: allTeams };
   };
 
   public findByPk = async (id: string) => {
     const teamById = await this.model.findByPk(id);
-    console.log(teamById);
 
-    return teamById;
+    return { code: 200, message: teamById };
   };
 }
