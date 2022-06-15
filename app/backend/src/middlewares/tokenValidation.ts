@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { IDecode, RequestWithUserRole } from '../interfaces/request.interface';
+import { IDecode, RequestWithUserRole } from '../@types/request.types';
 import JWT from '../utils/jwtSecret';
 
 const validateToken = (req: RequestWithUserRole, res: Response, next: NextFunction) => {

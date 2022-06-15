@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { RequestWithUserRole } from '../interfaces/request.interface';
+import { RequestWithUserRole } from '../@types/request.types';
 import UserService from '../services/user';
 
 export default class UserController {

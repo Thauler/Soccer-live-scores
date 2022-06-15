@@ -1,4 +1,4 @@
-export interface IUser {
+export type IUser = {
   email: string,
   password: string,
-}
+};

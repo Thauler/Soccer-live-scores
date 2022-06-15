@@ -1,13 +1,13 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '.';
 
-export default class Team extends Model {
+export default class TeamsModel extends Model {
   public id: number;
 
   public teamName: string;
 }
 
-Team.init({
+TeamsModel.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
