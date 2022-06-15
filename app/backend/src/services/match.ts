@@ -17,4 +17,36 @@ export default class MatchesService {
     });
     return { code: 200, message: result };
   };
+
+  public queryInProgress = async () => {
+    const result = await this.model.findAll({
+      where: { inProgress: true },
+      include: [
+        { model: TeamsModel, as: 'teamHome', attributes: { exclude: ['id'] } },
+        { model: TeamsModel, as: 'teamAway', attributes: { exclude: ['id'] } },
+      ],
+    });
+    return { code: 200, message: result };
+  };
+
+  public queryNotInProgress = async () => {
+    const result = await this.model.findAll({
+      where: { inProgress: false },
+      include: [
+        { model: TeamsModel, as: 'teamHome', attributes: { exclude: ['id'] } },
+        { model: TeamsModel, as: 'teamAway', attributes: { exclude: ['id'] } },
+      ],
+    });
+    return { code: 200, message: result };
+  };
+
+  public getAllAndQuery = async (inProgress: string) => {
+    if (inProgress === 'true') {
+      return this.queryInProgress();
+    }
+    if (inProgress === 'false') {
+      return this.queryNotInProgress();
+    }
+    return this.findAll();
+  };
 }
