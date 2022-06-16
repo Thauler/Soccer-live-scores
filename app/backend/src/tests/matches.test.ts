@@ -8,7 +8,8 @@ import { app } from '../app';
 import MatchesModel from '../database/models/Match';
 
 import { Response } from 'superagent';
-import { fakeInProgress, fakeMatchesList, fakeNotInProgress } from './mockTest/matchesMock';
+import { fakeInProgress, fakeMatchesList, fakeNewMatchInProgress, fakeNewMatchInProgressResponse, fakeNotInProgress } from './mockTest/matchesMock';
+import { fakeLogin } from './mockTest/userMock';
 
 chai.use(chaiHttp);
 
@@ -35,7 +36,7 @@ describe('em caso de sucesso', () => {
       expect(chaiHttpResponse.body).deep.equal(fakeMatchesList)
   });
 });
-});
+
 describe('Teststando a rota GET de /matches', () => {
   let chaiHttpResponse: Response;
 
@@ -126,4 +127,35 @@ describe('Erro no servidor status 500', () => {
         expect(message).deep.equal('Internal Server Error');
       });
     });
+  });
 
+describe('Testando a rota POST de /matches', () => {
+  let chaiHttpResponse: Response;
+describe('em caso de sucesso', () => {
+  before(() => {
+    sinon.stub(MatchesModel, 'create').resolves(fakeNewMatchInProgress);
+  });
+
+  after(() => {
+    (MatchesModel.create as sinon.SinonStub).restore();
+  });
+
+  it('Caso a partida seja inserida com sucesso, deve-se retornar os dados da partida, com status 201', async () => {
+      const { body: { token } } = await chai
+      .request(app)
+      .post('/login')
+      .send(fakeLogin)
+
+      chaiHttpResponse = await chai
+      .request(app)
+      .post('/matches')
+      .set({ authorization: token })
+      .send(fakeNewMatchInProgress);
+
+      const { match } = chaiHttpResponse.body
+
+      expect(chaiHttpResponse.status).to.be.equals(201);
+      expect(match).deep.equals(fakeNewMatchInProgressResponse);
+  });
+});
+})

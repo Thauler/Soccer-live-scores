@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { IUser } from '../@types/IUser.interfaces';
+import { IUser } from '../@types/IUser.type';
 import JWT from '../utils/jwtSecret';
 import UserModel from '../database/models/User';
 

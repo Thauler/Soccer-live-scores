@@ -18,4 +18,14 @@ export default class MatchesController {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   };
+
+  public create = async (req: Request, res: Response) => {
+    try {
+      const result = await this.service.create(req.body);
+      return res.status(result.code).json(result.message);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
 }

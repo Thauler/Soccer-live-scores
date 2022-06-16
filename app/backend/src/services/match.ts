@@ -1,3 +1,4 @@
+import { IMatch } from '../@types/IMatch.types';
 import TeamsModel from '../database/models/Team';
 import MatchesModel from '../database/models/Match';
 
@@ -48,5 +49,10 @@ export default class MatchesService {
       return this.queryNotInProgress();
     }
     return this.findAll();
+  };
+
+  public create = async (body: IMatch) => {
+    const result = await this.model.create(body);
+    return { code: 201, message: result };
   };
 }
