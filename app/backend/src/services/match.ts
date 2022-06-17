@@ -55,4 +55,9 @@ export default class MatchesService {
     const result = await this.model.create(body);
     return { code: 201, message: result };
   };
+
+  public update = async (id: string) => {
+    await this.model.update({ inProgress: false }, { where: { id } });
+    return { code: 200, message: { message: 'Finished' } };
+  };
 }
