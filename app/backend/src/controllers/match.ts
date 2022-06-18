@@ -40,4 +40,16 @@ export default class MatchesController {
       return res.status(500).json(SERVER_ERROR);
     }
   };
+
+  public updateById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    try {
+      const result = await this.service.updateById(id, homeTeamGoals, awayTeamGoals);
+      return res.status(result.code).json(result.message);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json(SERVER_ERROR);
+    }
+  };
 }

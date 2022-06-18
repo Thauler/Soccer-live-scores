@@ -60,4 +60,10 @@ export default class MatchesService {
     await this.model.update({ inProgress: false }, { where: { id } });
     return { code: 200, message: { message: 'Finished' } };
   };
+
+  public updateById = async (id: string, homeGoals: number, awayGoals: number) => {
+    await this.model
+      .update({ homeTeamGoals: homeGoals, awayTeamGoals: awayGoals }, { where: { id } });
+    return { code: 200, message: { message: 'The score has been updated' } };
+  };
 }

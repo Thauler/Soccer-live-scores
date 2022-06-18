@@ -12,7 +12,7 @@ export default class UserMiddleware {
   Promise<Response | undefined> => {
     const { email, password } = req.body;
 
-    if (email.length === 0 || password.length === 0) {
+    if (!email || !password) {
       return res.status(400).json({ message: 'All fields must be filled' });
     }
     next();

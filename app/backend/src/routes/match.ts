@@ -10,5 +10,6 @@ const matchesMiddleware = new MatchesMiddleware();
 routes.get('/', matchesController.allMatches);
 routes.post('/', matchesMiddleware.create, matchesController.create);
 routes.patch('/:id/finish', matchesController.update);
+routes.patch('/:id', matchesController.updateById);
 
 export default routes;

@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
-import chaiHttp from 'chai-http';
+import chaiHttp = require('chai-http');
 import { before } from 'mocha';
 
 import { app } from '../app';
@@ -35,6 +35,27 @@ describe('em caso de sucesso', () => {
       expect(chaiHttpResponse.body).to.be.equals(fakeTeamsList)
   });
 });
+describe('em caso de erro 500', () => {
+    before(() => {
+    sinon.stub(TeamsModel, 'findAll').throws();
+  });
+
+  after(() => {
+    (TeamsModel.findAll as sinon.SinonStub).restore();
+  });
+
+  
+  it('Internal server error', async () => {
+    chaiHttpResponse = await chai
+    .request(app)
+    .get('/teams');
+
+    const { message } = chaiHttpResponse.body;
+
+    expect(chaiHttpResponse.status).to.be.equals(500);
+    expect(message).to.be.equals('Internal Server');
+  })
+})
 });
 describe('Testando a rota GET de /teams/:id', () => {
   let chaiHttpResponse: Response;

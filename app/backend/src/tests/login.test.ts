@@ -1,14 +1,14 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
-import chaiHttp from 'chai-http';
+import chaiHttp = require('chai-http');
 import { before } from 'mocha';
 
 import { app } from '../app';
 import UserModel from '../database/models/User';
 
 import { Response } from 'superagent';
-import { fakeLogin, fakeLoginResponse, fakeNoEmail, fakeNoPassword, fakeWrongEmail, fakeWrongPassword } from './mockTest/userMock';
+import { fakeLogin, fakeLoginResponseModel, fakeNoEmail, fakeNoPassword, fakeWrongEmail, fakeWrongPassword } from './mockTest/userMock';
 
 chai.use(chaiHttp);
 
@@ -19,7 +19,7 @@ describe('Teststando a rota POST de /login', () => {
 
 describe('em caso de sucesso', () => {
   before(() => {
-    sinon.stub(UserModel, 'findOne').resolves(fakeLoginResponse);
+    sinon.stub(UserModel, 'findOne').resolves(fakeLoginResponseModel);
   });
 
   after(() => {
@@ -32,11 +32,11 @@ describe('em caso de sucesso', () => {
       .post('/login')
       .send(fakeLogin);
 
-      const { user, token } = chaiHttpResponse.body
+      const { user, token } = chaiHttpResponse.body;
 
       expect(chaiHttpResponse.status).to.be.equals(200);
-      expect(user).deep.equals(fakeLoginResponse);
-      expect(user.password).to.have.length.greaterThanOrEqual(6);
+      expect(user).deep.equal(fakeLoginResponseModel.userAtt);
+      expect(fakeLogin.password).to.have.length.greaterThanOrEqual(6);
       expect(token).not.equal(undefined);
   });
 });
@@ -59,7 +59,7 @@ describe('caso o email passado seja invalido', () => {
       const { message } = chaiHttpResponse.body;
 
       expect(chaiHttpResponse.status).to.equals(401);
-      expect(message).to.be.equals({ message: "Incorrect email or password" });
+      expect(message).to.be.equals("Incorrect email or password");
   })
 })
 describe('caso a senha seja inválida', () => {
@@ -72,21 +72,25 @@ describe('caso a senha seja inválida', () => {
       const { message } = chaiHttpResponse.body;
 
       expect(chaiHttpResponse.status).to.equals(401);
-      expect(fakeWrongPassword.password).to.have.length.lessThan(6);
-      expect(message).to.be.equals({ message: "Incorrect email or password" });
+      expect(fakeWrongPassword.password).not.to.have.length.greaterThanOrEqual(6);
+      expect(message).deep.equals('Incorrect email or password');
   })
-})
+});
 describe('Caso o email não seja informado', () => {
   it('Se o login não tiver o campo "email"', async () => {
     chaiHttpResponse = await chai
     .request(app)
     .post('/login')
-    .send(fakeNoEmail);
+    .send({
+      password: 'secret_admin',
+    });
 
     const { message } = chaiHttpResponse.body;
+    console.log(message);
+    
 
-    expect(chaiHttpResponse.status).to.equals(400);
-    expect(message).to.be.equals({ message: "All fields must be filled" });
+    expect(chaiHttpResponse.status).to.be.equal(400);
+    expect(message).deep.equals('All fields must be filled');
   })
 })
 describe('Caso a senha não seja informado', () => {
