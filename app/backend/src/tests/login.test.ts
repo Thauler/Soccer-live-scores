@@ -81,13 +81,9 @@ describe('Caso o email não seja informado', () => {
     chaiHttpResponse = await chai
     .request(app)
     .post('/login')
-    .send({
-      password: 'secret_admin',
-    });
+    .send(fakeNoEmail);
 
     const { message } = chaiHttpResponse.body;
-    console.log(message);
-    
 
     expect(chaiHttpResponse.status).to.be.equal(400);
     expect(message).deep.equals('All fields must be filled');
@@ -103,8 +99,31 @@ describe('Caso a senha não seja informado', () => {
     const { message } = chaiHttpResponse.body;
 
     expect(chaiHttpResponse.status).to.equals(400);
-    expect(message).to.be.equals({ message: "All fields must be filled" });
+    expect(message).to.be.equals("All fields must be filled");
   })
-})
 });
+  describe('Valida o role com o Token', () => {
+    describe('em caso de sucesso', () => {
+      before(() => {
+        sinon.stub(UserModel, "findOne").resolves(fakeLoginResponseModel)
+      })
+      after(() => {
+        (UserModel.findOne as sinon.SinonStub).restore()
+      })
+      it('A resposta deve ser de status 200 com uma string contendo a role do user', async () => {
+        const { body: { token } } = await chai
+        .request(app)
+        .post('/login')
+        .send(fakeLogin)
 
+        chaiHttpResponse = await chai
+        .request(app)
+        .get('/login/validate')
+        .set({ authorization: token })
+
+        expect(chaiHttpResponse.status).to.be.equal(200);
+        expect(chaiHttpResponse.body).deep.eq('admin');
+      })
+    });
+  });
+});
