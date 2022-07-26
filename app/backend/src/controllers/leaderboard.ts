@@ -27,4 +27,17 @@ export default class LeaderboadController {
       return res.status(500).json('Internal Server Error');
     }
   };
+
+  public leaderboard = async (req: Request, res: Response) => {
+    try {
+      const away = await this.service.leaderboardAway();
+      const home = await this.service.leaderboardHome();
+
+      const result = await this.service.leaderboard(away, home);
+      return res.status(200).json(result);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json('Internal erver Error');
+    }
+  };
 }
